@@ -1,0 +1,58 @@
+#include <NewPing.h>
+#define trig_pin A3 //analog input 3
+#define echo_pin A4 //analog input 4
+#define maximum_distance 200
+
+NewPing sonar(trig_pin, echo_pin, maximum_distance);
+const int LeftMotorForward = 5;
+const int LeftMotorBackward = 4;
+char labview;
+
+void setup()
+{
+Serial.begin(9600);
+pinMode (LeftMotorForward, OUTPUT);
+pinMode (LeftMotorBackward, OUTPUT);
+}
+
+void loop()
+{
+int data=readPing();
+Serial.println(data);
+labview = Serial.read();
+if (labview == '1')
+{
+moveForward();
+}
+else if (labview == '2')
+{
+moveBackward();
+}
+else if (labview == 'S')
+{
+moveStop();
+}
+}
+
+int readPing()
+{
+delay(10);
+int cm = sonar.ping_cm();
+return cm;
+}
+
+void moveStop()
+{ 
+digitalWrite (LeftMotorForward, LOW); 
+digitalWrite (LeftMotorBackward, LOW);
+}
+void moveForward()
+{
+digitalWrite (LeftMotorForward, HIGH); 
+digitalWrite (LeftMotorBackward, LOW); 
+}
+void moveBackward()
+{
+digitalWrite (LeftMotorForward, LOW); 
+digitalWrite (LeftMotorBackward, HIGH); 
+}
